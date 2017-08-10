@@ -81,8 +81,7 @@ movementIndexImage = miImage;
 if wellCircularMask > 0
   imageHeight = size(movementIndexImage,1);
   imageWidth = size(movementIndexImage,2);
-  wellCircularMaskFactor = 0.7;
-  circleRadius = (imageWidth / nColumns) * (wellCircularMaskFactor/2);
+  circleRadius = (imageWidth / nColumns) * (wellCircularMask/2);
   [W,H] = meshgrid(1:imageWidth,1:imageHeight);
   centerW = (imageWidth/nColumns) * (0.5);
   centerH = (imageHeight/nRows) * (0.5);
