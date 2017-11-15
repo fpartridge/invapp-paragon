@@ -39,7 +39,7 @@ fprintf('Analysing %s with version %.3f of invappParagon (%s)\n', outputLog.file
 switch extension
   case '.tif'
     movieMetadata = imfinfo(movieFile);
-    nFrames = numel(movieMetadata)
+    nFrames = numel(movieMetadata);
     % preallocate memory to array
     originalMovie = nan(movieMetadata(1).Height, movieMetadata(1).Width,nFrames);
     for i = 1:nFrames
@@ -57,7 +57,7 @@ movementIndexImage = originalMovie;
 % get variance
 movementIndexImage = var(movementIndexImage,[],3);
 % get the mean and standard deviation of the variance image
-[varianceMean standardDeviation] = normfit(movementIndexImage(:));
+[varianceMean, standardDeviation] = normfit(movementIndexImage(:));
 % report standard deviation as diagnostic for this movie
 data.standardDeviation = standardDeviation;
 
@@ -106,6 +106,7 @@ yy = linspace(1,size(movementIndexImage,2),nColumns+1);
 yy = floor(yy);
 
 % count "moving" pixels in each well
+movementIndex = zeros(nRows, nColumns);
 for x = 1:length(xx)-1
   for y = 1:length(yy)-1
     t = movementIndexImage(xx(x):xx(x+1),yy(y):yy(y+1));
