@@ -50,9 +50,9 @@ function invappParagonBatch(folder, optionalArguments)
 %%
 %% Changelog
 
-%% 0.100 Initial version 20120410 [fp]
+%% 1.000 first public version
 
-log.invappParagonBatchVersion  = 0.131;
+log.invappParagonBatchVersion  = 1.000;
 log.folder          = folder;
 log.time            = datestr(now,'yyyymmdd HHMM');
 

@@ -24,8 +24,8 @@ function data = invappParagon(movieFile, nColumns, nRows, movementIndexThreshold
 
 
 % Changelog:
-% 0.100 - first version
-outputLog.invappParagonVersion      = 0.100;
+% 1.000 - first public version
+outputLog.invappParagonVersion      = 1.000;
 
 outputLog.time = datestr(now);
 outputLog.file = movieFile;
