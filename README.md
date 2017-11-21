@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/98302026.svg)](https://zenodo.org/badge/latestdoi/98302026)
+
 # invappParagon
 
 A MATLAB function for analysing worm movement / growth from movies. 
