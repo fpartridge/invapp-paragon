@@ -200,6 +200,7 @@ else
     fileHandle = fopen(filename,'w');
 end
 
+
 if (fileHandle < 0)
     error(['Cannot open file ', filename, ' - check that it is not open in another program']);
 end
