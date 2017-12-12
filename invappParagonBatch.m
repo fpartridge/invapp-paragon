@@ -40,7 +40,7 @@ function invappParagonBatch(folder, optionalArguments)
 % 'plateRows'               Default: 8
 % 'movementIndexThreshold'  Default: 1
 %       Threshold for movement index moving/not moving pixels.
-% 'wellCircularMark'        Default: 0
+% 'wellCircularMask'        Default: 0
 %       An array of circular masks can be applied to the movie to ignore
 %       apparent movement outside circular wells (typically due to changes
 %       in illumination or vibration during movie capture).
@@ -92,7 +92,7 @@ end
 frameRange.start = 0;
 frameRange.end = 0;
 options = struct(   'plateColumns',12,'plateRows',8,...
-                    'movementIndexThreshold',1,'wellCircularMark',0);
+                    'movementIndexThreshold',1,'wellCircularMask',0);
 % if passed optional arguments then overwrite the defaults
 if nargin == 2
     optionNames = fieldnames(options);
@@ -116,7 +116,7 @@ nRows    = getfield(options,'plateRows');
 nWells   = nColumns * nRows;
 fprintf(outputLog,'%dx%d wells per image\n\n', nColumns, nRows);
 movementIndexThreshold = getfield(options,'movementIndexThreshold');
-wellCircularMark = getfield(options,'wellCircularMark');
+wellCircularMask = getfield(options,'wellCircularMask');
 
 
 %% look for .tif files in subfolders
@@ -137,7 +137,7 @@ for filenameIndex = 1:numel(imageFileList)
 
     %run INVAPP Paragon
     filename = filename{:};
-    data = invappParagon(filename,nColumns,nRows,movementIndexThreshold,wellCircularMark);
+    data = invappParagon(filename,nColumns,nRows,movementIndexThreshold,wellCircularMask);
 
     ipMovements = reshape(data.movementIndex,nWells,1);
     ipMovements = cellstr(num2str(ipMovements(:))); % cast to cell
