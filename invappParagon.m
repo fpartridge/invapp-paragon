@@ -25,7 +25,7 @@ function data = invappParagon(movieFile, nColumns, nRows, movementIndexThreshold
 
 % Changelog:
 % 1.000 - first public version
-outputLog.invappParagonVersion      = 1.000;
+outputLog.invappParagonVersion      = 1.001;
 
 outputLog.time = datestr(now);
 outputLog.file = movieFile;
@@ -42,8 +42,18 @@ switch extension
     nFrames = numel(movieMetadata);
     % preallocate memory to array
     originalMovie = nan(movieMetadata(1).Height, movieMetadata(1).Width,nFrames);
-    for i = 1:nFrames
-      originalMovie(:,:,i) = imread(movieFile,i);
+    % is it a greyscale or colour movie. If colour convert to grey
+    switch movieMetadata(1).ColorType
+      case 'grayscale'
+        for i = 1:nFrames
+          originalMovie(:,:,i) = imread(movieFile,i);
+        end    
+      case 'truecolor' 
+        for i = 1:nFrames
+          originalMovie(:,:,i) = rgb2gray(imread(movieFile,i));
+        end   
+      otherwise
+        error('Problem understanding colour type of %s', movieFile)
     end
   otherwise
     error('Unrecognised filetype %s', movieFile)
