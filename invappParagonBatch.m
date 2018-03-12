@@ -50,9 +50,9 @@ function invappParagonBatch(folder, optionalArguments)
 %%
 %% Changelog
 
-%% 1.000 first public version
+%% 1.001 first public version
 
-log.invappParagonBatchVersion  = 1.000;
+log.invappParagonBatchVersion  = 1.001;
 log.folder          = folder;
 log.time            = datestr(now,'yyyymmdd-HHMM');
 
@@ -126,7 +126,7 @@ imageFileList = cellstr(imageFileList);
 
 %% write table headings into csv file
 resultsFilename = [outputFolder,filesep,'invappParagonBatchResults',log.time,'.csv'];
-headings={'filename','well','movementScore'};
+headings={'filename','well','row','column','movementScore'};
 writeCellArrayToCSV(resultsFilename,headings,0);
 
 %% Run initial analysis
@@ -145,19 +145,27 @@ for filenameIndex = 1:numel(imageFileList)
     experiment  = cellstr(experiment);
 
     % well coordinate labels
-    clear wellCoordinates;
+    wellCoordinates = cell(1,nWells);
+    wellRow = cell(1,nWells);
+    wellColumn = cell(1,nWells);
     count=0;
     rowlabels='ABCDEFGHIJKLMNOPQRSTUV';
     for x=1:nColumns
         for y=1:nRows
             count = count + 1;
             wellCoordinates{count}=[rowlabels(y),num2str(x,'%02d')];
+            wellRow{count} = rowlabels(y);
+            wellColumn{count} = [num2str(x)];
         end
     end
     wellCoordinates = wellCoordinates';
     wellCoordinates = cellstr(wellCoordinates);
+    wellRow = wellRow';
+    wellRow = cellstr(wellRow);
+    wellColumn = wellColumn';
+    wellColumn = cellstr(wellColumn);
 
-    results=[experiment,wellCoordinates,ipMovements];
+    results=[experiment,wellCoordinates,wellRow,wellColumn,ipMovements];
 
     % analysis of each movie file written sequentially in the csv output
     fileRow=nWells*(filenameIndex-1)+2;
