@@ -54,7 +54,7 @@ function invappParagonBatch(folder, optionalArguments)
 
 log.invappParagonBatchVersion  = 1.000;
 log.folder          = folder;
-log.time            = datestr(now,'yyyymmdd HHMM');
+log.time            = datestr(now,'yyyymmdd-HHMM');
 
 outputFolder = strcat(folder,filesep,'Analysis_',log.time);
 
@@ -125,8 +125,9 @@ imageFileList = cellstr(imageFileList);
 
 
 %% write table headings into csv file
+resultsFilename = [outputFolder,filesep,'invappParagonBatchResults',log.time,'.csv'];
 headings={'filename','well','movementScore'};
-writeCellArrayToCSV([outputFolder,filesep,'invappParagonBatchResults.csv'],headings,0);
+writeCellArrayToCSV(resultsFilename,headings,0);
 
 %% Run initial analysis
 for filenameIndex = 1:numel(imageFileList)
@@ -161,7 +162,7 @@ for filenameIndex = 1:numel(imageFileList)
     % analysis of each movie file written sequentially in the csv output
     fileRow=nWells*(filenameIndex-1)+2;
     startCell=strcat('A',num2str(fileRow));
-    writeCellArrayToCSV([outputFolder,filesep,'invappParagonBatchResults.csv'],results,1);
+    writeCellArrayToCSV(resultsFilename,results,1);
 
     fprintf(outputLog,'  Ran invappParagon version %.3f, on file %s (%s)\n', data.outputLog.invappParagonVersion, data.outputLog.file, data.outputLog.time);
 
