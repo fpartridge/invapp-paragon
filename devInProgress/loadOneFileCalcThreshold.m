@@ -1,7 +1,6 @@
-function data = invappParagon(movieFile, nColumns, nRows, movementIndexThreshold, wellCircularMask,specifyAbsoluteThreshold)
-%% Methods for analysing worm movement from movies
+function loadOneFileCalcThreshold(movieFile)
 
-%% Copyright 2017 Steven Buckingham and Freddie Partridge
+%% Copyright 2018 Steven Buckingham and Freddie Partridge
 
 % MIT License:
 % Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,12 +23,8 @@ function data = invappParagon(movieFile, nColumns, nRows, movementIndexThreshold
 
 
 % Changelog:
-outputLog.invappParagonVersion      = 1.003;
+% 1.000 - first public version
 
-outputLog.time = datestr(now);
-outputLog.file = movieFile;
-
-fprintf('Analysing %s with version %.3f of invappParagon (%s)\n', outputLog.file, outputLog.invappParagonVersion, outputLog.time);
 
 %% DATA READING
 % find out if this is a tiff
@@ -76,58 +71,6 @@ data.standardDeviation = standardDeviation;
 %% Suggested values:
 %% Trichuris adults, C. elegans 1
 %% Haemonchus L3: 3
-if specifyAbsoluteThreshold > 0
-    % use predefined threshold, might be useful for comparing between
-    % plates with different contents
-    miImage = movementIndexImage > specifyAbsoluteThreshold;
-else
-    miImage = movementIndexImage > varianceMean + movementIndexThreshold * standardDeviation;
-end
+movementIndexThreshold = 1;
 
-movementIndexImage = miImage;
-
-%% Well circular masking (optional)
-%% sometimes apparent movement occurs outside the well due to
-%% changes in illumination / vibration
-%% therefore can optionally mask the image with an array of circles
-%% corresponding to the well contents
-if wellCircularMask > 0
-  imageHeight = size(movementIndexImage,1);
-  imageWidth = size(movementIndexImage,2);
-  circleRadius = (imageWidth / nColumns) * (wellCircularMask/2);
-  [W,H] = meshgrid(1:imageWidth,1:imageHeight);
-  centerW = (imageWidth/nColumns) * (0.5);
-  centerH = (imageHeight/nRows) * (0.5);
-  mask = ((W-centerW).^2 + (H-centerH).^2) < circleRadius^2;
-  for i = 1: nColumns
-    for j = 1: nRows
-      centerW = (imageWidth/nColumns) * (i-0.5);
-      centerH = (imageHeight/nRows) * (j-0.5);
-      mask = mask | ((W-centerW).^2 + (H-centerH).^2) < circleRadius^2;
-    end
-  end
-  movementIndexImage = movementIndexImage .* mask;
-end
-
-% diagnostic image to help understand movementIndex success
-data.movementIndexForeground = movementIndexImage;
-
-% decide how to cut the image up into wells
-xx = linspace(1,size(movementIndexImage,1),nRows+1);
-xx = floor(xx); % choose whole numbers of pixels
-yy = linspace(1,size(movementIndexImage,2),nColumns+1);
-yy = floor(yy);
-
-% count "moving" pixels in each well
-movementIndex = zeros(nRows, nColumns);
-for x = 1:length(xx)-1
-  for y = 1:length(yy)-1
-    t = movementIndexImage(xx(x):xx(x+1),yy(y):yy(y+1));
-    movementIndex(x,y) = sum(t(:));
-  end
-end
-data.movementIndex = movementIndex; %  results returned in data structure
-
-data.outputLog   = outputLog;
-
-end
+absoluteThreshold = varianceMean + movementIndexThreshold * standardDeviation

@@ -47,12 +47,14 @@ function invappParagonBatch(folder, optionalArguments)
 %       If 0 there is no masking of areas of a plate outside the well
 %       Otherwise values from 0-1 = circular mask radius as a proportion
 %       of the width/height of the rectangle containing the well
+% 'specifyAbsoluteThreshold' Default : 0
+%       In some situations might want to specify a certain threshold for
+%       motile pixel variance instead of calculating from each movie
 %%
 %% Changelog
 
-%% 1.001 first public version
 
-log.invappParagonBatchVersion  = 1.001;
+log.invappParagonBatchVersion  = 1.003;
 log.folder          = folder;
 log.time            = datestr(now,'yyyymmdd-HHMM');
 
@@ -92,7 +94,8 @@ end
 frameRange.start = 0;
 frameRange.end = 0;
 options = struct(   'plateColumns',12,'plateRows',8,...
-                    'movementIndexThreshold',1,'wellCircularMask',0);
+                    'movementIndexThreshold',1,'wellCircularMask',0,...
+                    'specifyAbsoluteThreshold',0);
 % if passed optional arguments then overwrite the defaults
 if nargin == 2
     optionNames = fieldnames(options);
@@ -117,6 +120,8 @@ nWells   = nColumns * nRows;
 fprintf(outputLog,'%dx%d wells per image\n\n', nColumns, nRows);
 movementIndexThreshold = getfield(options,'movementIndexThreshold');
 wellCircularMask = getfield(options,'wellCircularMask');
+specifyAbsoluteThreshold = getfield(options,'specifyAbsoluteThreshold');
+
 
 
 %% look for .tif files in subfolders
@@ -138,7 +143,7 @@ for filenameIndex = 1:numel(imageFileList)
 
     %run INVAPP Paragon
     filename = filename{:};
-    data = invappParagon(filename,nColumns,nRows,movementIndexThreshold,wellCircularMask);
+    data = invappParagon(filename,nColumns,nRows,movementIndexThreshold,wellCircularMask,specifyAbsoluteThreshold);
 
     ipMovements = reshape(data.movementIndex,nWells,1);
     ipMovements = cellstr(num2str(ipMovements(:))); % cast to cell
