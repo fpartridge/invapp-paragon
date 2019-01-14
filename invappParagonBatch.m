@@ -1,7 +1,7 @@
 function invappParagonBatch(folder, optionalArguments)
 %% Automated experiment processing in INVAPP Paragon
 %%
-%% Copyright 2017 Steven Buckingham and Freddie Partridge
+%% Copyright 2017-9 Steven Buckingham and Freddie Partridge
 
 % MIT License:
 % Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -54,7 +54,7 @@ function invappParagonBatch(folder, optionalArguments)
 %% Changelog
 
 
-log.invappParagonBatchVersion  = 1.003;
+log.invappParagonBatchVersion  = 1.004;
 log.folder          = folder;
 log.time            = datestr(now,'yyyymmdd-HHMM');
 
@@ -189,6 +189,7 @@ for filenameIndex = 1:numel(imageFileList)
         mkdir([outputFolder,filesep,'invappParagonDiagnostics'],'Movement index foreground');
     end
     f=figure('Name', ['Movement index for file ',filename],'Visible','off');
+    colormap([0.8 0.8 0.8; 0 0 0]); 
     imagesc(data.movementIndexForeground);
     axis equal;
     axis off;
