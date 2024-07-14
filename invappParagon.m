@@ -1,7 +1,7 @@
-function data = invappParagon(movieFile, nColumns, nRows, movementIndexThreshold, wellCircularMask,specifyAbsoluteThreshold)
+function data = invappParagon(movieFile, nColumns, nRows, movementIndexThreshold, wellCircularMask,specifyAbsoluteThreshold, gaussianBlur)
 %% Methods for analysing worm movement from movies
 
-%% Copyright 2017 Steven Buckingham and Freddie Partridge
+%% Copyright 2017-2024 Steven Buckingham and Freddie Partridge
 
 % MIT License:
 % Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,7 +24,7 @@ function data = invappParagon(movieFile, nColumns, nRows, movementIndexThreshold
 
 
 % Changelog:
-outputLog.invappParagonVersion      = 1.003;
+outputLog.invappParagonVersion      = 1.004;
 
 outputLog.time = datestr(now);
 outputLog.file = movieFile;
@@ -45,7 +45,7 @@ switch extension
     switch movieMetadata(1).ColorType
       case 'grayscale'
         for i = 1:nFrames
-          originalMovie(:,:,i) = imread(movieFile,i);
+            originalMovie(:,:,i) = imread(movieFile,i);
         end    
       case 'truecolor' 
         for i = 1:nFrames
@@ -59,6 +59,12 @@ switch extension
 end
 
 originalMovie = single(originalMovie); % images loaded as double but don't have enough memory
+
+%% Apply Gaussian blur
+if gaussianBlur == 1
+    disp('gaussian')
+    originalMovie = imgaussfilt(originalMovie, 2);
+end
 
 %% MEASURE MOTILITY
 % get variance

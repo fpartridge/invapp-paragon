@@ -1,7 +1,7 @@
 function invappParagonBatch(folder, optionalArguments)
 %% Automated experiment processing in INVAPP Paragon
 %%
-%% Copyright 2017-9 Steven Buckingham and Freddie Partridge
+%% Copyright 2017-2024 Steven Buckingham and Freddie Partridge
 
 % MIT License:
 % Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -50,11 +50,14 @@ function invappParagonBatch(folder, optionalArguments)
 % 'specifyAbsoluteThreshold' Default : 0
 %       In some situations might want to specify a certain threshold for
 %       motile pixel variance instead of calculating from each movie
+% 'gaussianBlur' Default: 0
+%       For cameras with high noise might want to blur image before
+%       analysis
 %%
 %% Changelog
 
 
-log.invappParagonBatchVersion  = 1.004;
+log.invappParagonBatchVersion  = 1.005;
 log.folder          = folder;
 log.time            = datestr(now,'yyyymmdd-HHMM');
 
@@ -95,7 +98,7 @@ frameRange.start = 0;
 frameRange.end = 0;
 options = struct(   'plateColumns',12,'plateRows',8,...
                     'movementIndexThreshold',1,'wellCircularMask',0,...
-                    'specifyAbsoluteThreshold',0);
+                    'specifyAbsoluteThreshold',0,'gaussianBlur',0);
 % if passed optional arguments then overwrite the defaults
 if nargin == 2
     optionNames = fieldnames(options);
@@ -121,6 +124,7 @@ fprintf(outputLog,'%dx%d wells per image\n\n', nColumns, nRows);
 movementIndexThreshold = getfield(options,'movementIndexThreshold');
 wellCircularMask = getfield(options,'wellCircularMask');
 specifyAbsoluteThreshold = getfield(options,'specifyAbsoluteThreshold');
+gaussianBlur = getfield(options,'gaussianBlur');
 
 
 
@@ -143,7 +147,7 @@ for filenameIndex = 1:numel(imageFileList)
 
     %run INVAPP Paragon
     filename = filename{:};
-    data = invappParagon(filename,nColumns,nRows,movementIndexThreshold,wellCircularMask,specifyAbsoluteThreshold);
+    data = invappParagon(filename,nColumns,nRows,movementIndexThreshold,wellCircularMask,specifyAbsoluteThreshold,gaussianBlur);
 
     ipMovements = reshape(data.movementIndex,nWells,1);
     ipMovements = cellstr(num2str(ipMovements(:))); % cast to cell
