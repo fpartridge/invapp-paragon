@@ -57,7 +57,7 @@ function invappParagonBatch(folder, optionalArguments)
 %% Changelog
 
 
-log.invappParagonBatchVersion  = 1.005;
+log.invappParagonBatchVersion  = 1.006;
 log.folder          = folder;
 log.time            = datestr(now,'yyyymmdd-HHMM');
 
@@ -197,9 +197,10 @@ for filenameIndex = 1:numel(imageFileList)
     imagesc(data.movementIndexForeground);
     axis equal;
     axis off;
-    print(f, '-r300', '-dpng', [outputFolder, filesep,'invappParagonDiagnostics',filesep,'Movement index foreground',filesep,filename,num2str(filenameIndex),'.png']);
-
-clear data;
+    % this old command exported the image with large white borders
+    % print(f, '-r300', '-dpng', [outputFolder, filesep,'invappParagonDiagnostics',filesep,'Movement index foreground',filesep,filename,num2str(filenameIndex),'.png']);
+    exportgraphics(f, [outputFolder, filesep,'invappParagonDiagnostics',filesep,'Movement index foreground',filesep,filename,num2str(filenameIndex),'.png'], 'Resolution',300) ;
+    clear data;
 end
 
 fclose(outputLog);
