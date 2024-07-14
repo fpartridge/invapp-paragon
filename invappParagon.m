@@ -24,7 +24,7 @@ function data = invappParagon(movieFile, nColumns, nRows, movementIndexThreshold
 
 
 % Changelog:
-outputLog.invappParagonVersion      = 1.004;
+outputLog.invappParagonVersion      = 1.005;
 
 outputLog.time = datestr(now);
 outputLog.file = movieFile;
@@ -62,7 +62,6 @@ originalMovie = single(originalMovie); % images loaded as double but don't have 
 
 %% Apply Gaussian blur
 if gaussianBlur == 1
-    disp('gaussian')
     originalMovie = imgaussfilt(originalMovie, 2);
 end
 
@@ -116,7 +115,16 @@ if wellCircularMask > 0
 end
 
 % diagnostic image to help understand movementIndex success
-data.movementIndexForeground = movementIndexImage;
+
+% this was amended to show the plate image with the movement imposed
+% in red on top
+
+firstImage = originalMovie(:,:,1);
+firstImageDim = uint8(firstImage) * 0.3;
+miImageRed = uint8(movementIndexImage) * 255;
+rgbImage = cat(3, miImageRed + firstImageDim, firstImageDim, firstImageDim);
+
+data.movementIndexForeground = rgbImage;
 
 % decide how to cut the image up into wells
 xx = linspace(1,size(movementIndexImage,1),nRows+1);
