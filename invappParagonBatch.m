@@ -57,7 +57,7 @@ function invappParagonBatch(folder, optionalArguments)
 %% Changelog
 
 
-log.invappParagonBatchVersion  = 1.006;
+log.invappParagonBatchVersion  = 1.007;
 log.folder          = folder;
 log.time            = datestr(now,'yyyymmdd-HHMM');
 
@@ -200,7 +200,20 @@ for filenameIndex = 1:numel(imageFileList)
     % this old command exported the image with large white borders
     % print(f, '-r300', '-dpng', [outputFolder, filesep,'invappParagonDiagnostics',filesep,'Movement index foreground',filesep,filename,num2str(filenameIndex),'.png']);
     exportgraphics(f, [outputFolder, filesep,'invappParagonDiagnostics',filesep,'Movement index foreground',filesep,filename,num2str(filenameIndex),'.png'], 'Resolution',300) ;
+    
+    if ~exist([outputFolder, filesep,'invappParagonDiagnostics', filesep, 'Well cutting and masking'])
+        mkdir([outputFolder,filesep,'invappParagonDiagnostics'],'Well cutting and masking');
+    end
+    f=figure('Name', ['Well cutting and circular mask for file ',filename],'Visible','off');
+    colormap([0.8 0.8 0.8; 0 0 0]); 
+    imagesc(data.wellCutImage);
+    axis equal;
+    axis off;
+    % this old command exported the image with large white borders
+    % print(f, '-r300', '-dpng', [outputFolder, filesep,'invappParagonDiagnostics',filesep,'Movement index foreground',filesep,filename,num2str(filenameIndex),'.png']);
+    exportgraphics(f, [outputFolder, filesep,'invappParagonDiagnostics',filesep,'Well cutting and masking',filesep,filename,num2str(filenameIndex),'.png'], 'Resolution',1200) ;
     clear data;
+
 end
 
 fclose(outputLog);

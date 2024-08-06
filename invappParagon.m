@@ -24,7 +24,7 @@ function data = invappParagon(movieFile, nColumns, nRows, movementIndexThreshold
 
 
 % Changelog:
-outputLog.invappParagonVersion      = 1.005;
+outputLog.invappParagonVersion      = 1.006;
 
 outputLog.time = datestr(now);
 outputLog.file = movieFile;
@@ -131,6 +131,21 @@ xx = linspace(1,size(movementIndexImage,1),nRows+1);
 xx = floor(xx); % choose whole numbers of pixels
 yy = linspace(1,size(movementIndexImage,2),nColumns+1);
 yy = floor(yy);
+
+% diagnostic image to help understand how the image is cut up into wells
+% plus the position of the circular masks
+
+wellCutImage = zeros(imageHeight, imageWidth, 'uint8');
+wellCutImage(xx,:) = 255;
+wellCutImage(:,yy) = 255;
+
+if wellCircularMask > 0
+    rgbWellImage = cat(3, firstImageDim, wellCutImage + firstImageDim, firstImageDim + uint8(mask) * 150);
+else
+    rgbWellImage = cat(3, firstImageDim, wellCutImage + firstImageDim, firstImageDim);
+end
+
+data.wellCutImage = rgbWellImage;
 
 % count "moving" pixels in each well
 movementIndex = zeros(nRows, nColumns);
