@@ -90,6 +90,8 @@ else
 end
 
 movementIndexImage = miImage;
+imageHeight = size(movementIndexImage,1);
+imageWidth = size(movementIndexImage,2);
 
 %% Well circular masking (optional)
 %% sometimes apparent movement occurs outside the well due to
@@ -97,8 +99,6 @@ movementIndexImage = miImage;
 %% therefore can optionally mask the image with an array of circles
 %% corresponding to the well contents
 if wellCircularMask > 0
-  imageHeight = size(movementIndexImage,1);
-  imageWidth = size(movementIndexImage,2);
   circleRadius = (imageWidth / nColumns) * (wellCircularMask/2);
   [W,H] = meshgrid(1:imageWidth,1:imageHeight);
   centerW = (imageWidth/nColumns) * (0.5);
